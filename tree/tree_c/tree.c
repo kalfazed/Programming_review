@@ -1,82 +1,81 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef char TypeData;
+typedef char element;
 
 typedef struct tree{
-    TypeData data;
+    element data;
     struct tree *lchild;
     struct tree *rchild;
-}Tree;
+}Tree, *pTree;
 
-Tree* CreateTree();
-void PreOrder(Tree*);
-void InOrder(Tree*);
-void PostOrder(Tree*);
 
+pTree InitTree();
+void PreOrder(pTree);
+void InOrder(pTree);
+void PostOrder(pTree);
 
 
 int main(){
-
-
-    printf("\nPlease input the tree, end with '#':");
-    Tree* t;
-    t = CreateTree();
-
-    printf("\nThe result of PreOrder is:");
-    PreOrder(t);
-    printf("\nThe result of InOrder is:");
-    InOrder(t);
-    printf("\nThe result of PostOrder is:");
-    PostOrder(t);
+    pTree tree;
+    printf("Please input data, end with '#': ");
+    tree = InitTree();
+    printf("PreOrder is : ");
+    PreOrder(tree);
     printf("\n");
+    printf("InOrder is : ");
+    InOrder(tree);
+    printf("\n");
+    printf("Postorder is : ");
+    PostOrder(tree);
+    printf("\n");
+    return 1;
 }
+
+
+pTree InitTree(){
+    char input;
+    pTree tree = NULL;
     
-
-
-Tree* CreateTree(){
-    Tree* t = NULL;
-    char ch = 0;
-
-
-    scanf("%c", &ch);
-    if(ch == '#')
-        t = NULL;
+    scanf("%c", &input);
+    if(input == '#')
+        tree = NULL;
     else{
-        t = (Tree*)malloc(sizeof(Tree)+1);
-        if (!t){
-            printf("There is an error in allocating memory to tree!\n");
-            return 0;
+        tree = (Tree*)malloc(sizeof(Tree)+1);
+        if(!tree)
+            printf("Error in allocating memory to tree\n");
+        else{
+            tree->data = input;
+            tree->lchild = InitTree();
+            tree->rchild = InitTree();
         }
-        t->data = ch;
-        t->lchild = CreateTree();
-        t->rchild = CreateTree();
     }
-    return t;
+    return tree;
 }
+        
 
-
-void PreOrder(Tree* t){
-    if (t){
-        printf("%c", t->data);
-        PreOrder(t->lchild);
-        PreOrder(t->rchild);
+void PreOrder(pTree tree){
+    if(tree){
+        printf("%c", tree->data);
+        PreOrder(tree->lchild);
+        PreOrder(tree->rchild);
     }
 }
+        
 
-void InOrder(Tree* t){
-    if (t){
-        InOrder(t->lchild);
-        printf("%c", t->data);
-        InOrder(t->rchild);
+void InOrder(pTree tree){
+    if(tree){
+        InOrder(tree->lchild);
+        printf("%c", tree->data);
+        InOrder(tree->rchild);
     }
 }
 
-void PostOrder(Tree* t){
-    if (t){
-        PostOrder(t->lchild);
-        PostOrder(t->rchild);
-        printf("%c", t->data);
+
+void PostOrder(pTree tree){
+    if(tree){
+        PostOrder(tree->lchild);
+        PostOrder(tree->rchild);
+        printf("%c", tree->data);
     }
 }
-
